@@ -2,6 +2,7 @@ import React from 'react'
 import User from "../models/User.js" ;
 import {Webhook} from "svix" ;
 
+
 // Now we have to create this ClerkWebHook Function from where wee will get the user data.
 
 const clerkWebhooks = async (req, res)=>{ 
@@ -9,7 +10,7 @@ const clerkWebhooks = async (req, res)=>{
     try{
         // Create a SVIX instance with ClerkWebHook Secret
         const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
-
+        
         // Getting Headers
         const headers = {
             "svix-id":req.headers["svix-id"],

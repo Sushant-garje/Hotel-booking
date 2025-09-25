@@ -33,8 +33,9 @@ import User from "../models/User.js";
 
 export const protect = async (req, res, next) => {
   try {
-    const auth = getAuth(req); // <-- Backend equivalent of useAuth()
-
+    const auth = getAuth(req);
+     // <-- Backend equivalent of useAuth()
+    console.log("Auth Info:", auth);
     if (!auth?.userId) {
       return res.status(401).json({ success: false, message: "Not authenticated" });
     }
