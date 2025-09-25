@@ -1,5 +1,5 @@
 import express from "express" ;
-import { checkAvailabilityAPI, createBooking, getHotelBookings, getUserBookings } from "../controllers/bookingController.js";
+import { checkAvailabilityAPI, createBooking, getHotelBookings, getUserBookings } from "../controllers/BookingControllers.js";
 import {protect} from '../middleware/authMiddleware.js';
 // Using this express we will create a Router named - BookingRouter
 

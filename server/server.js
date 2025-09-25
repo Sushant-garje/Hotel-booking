@@ -3,7 +3,7 @@ import "dotenv/config"
 import cors from "cors"
 import connectDB from "./configs/db.js"
 import { clerkMiddleware } from '@clerk/express'
-import clerkWebhooks from "./controllers/clerkWebhooks.js"
+import clerkWebhooks from "./controllers/clerkWebhook.js"
 import userRouter from "./routes/userRoutes.js"
 import hotelRouter from "./routes/hotelRoutes.js"
 import connectCloudinary from "./configs/cloudinary.js"
