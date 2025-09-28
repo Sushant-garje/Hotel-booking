@@ -1,6 +1,6 @@
 import { useAppContext } from '../context/Appcontext';
 import Title from './Title';
-import HotelCard from './HotelCard';
+import HotelCard from './Hotelcard';
 
 
 const FeaturedDestination = () => {
