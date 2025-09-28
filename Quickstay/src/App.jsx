@@ -13,6 +13,7 @@ import AddRoom from './pages/hotelowner/Addrooms';
 import ListRoom from './pages/hotelowner/Listroom';
 import Experience from './pages/Experience';
 import About from './pages/About';
+import Loader from './components/Loader';
 import {Toaster} from "react-hot-toast"
 import { useAppContext } from './context/Appcontext';
 
@@ -38,6 +39,7 @@ function App() {
         <Route path='/experience' element={<Experience/>}/>
         <Route path="/about" element={<About/>}/>
         <Route path='/my-bookings' element={<MyBookings/>}/>
+        <Route path='/loader/:nextUrl' element={<Loader/>}/>
 
           <Route path='/owner' element={<Layout/>}>
             <Route index element={<Dashboard/>}/>

@@ -1,5 +1,5 @@
 import express from "express" ;
-import { checkAvailabilityAPI, createBooking, getHotelBookings, getUserBookings } from "../controllers/BookingControllers.js";
+import { checkAvailabilityAPI, createBooking, getHotelBookings, getUserBookings, stripePayment } from "../controllers/BookingControllers.js";
 import {protect} from '../middleware/authMiddleware.js';
 // Using this express we will create a Router named - BookingRouter
 
@@ -26,6 +26,8 @@ bookingRouter.get('/user', protect  , getUserBookings  );
 // To get the Booking Detials for particular Hotel Owner 
 bookingRouter.get('/hotel', protect  , getHotelBookings  );
 //                (  Path  , middleware , ControllerFunction)
+
+bookingRouter.post("/stripe-payment", protect, stripePayment);
 
 
 export default bookingRouter;

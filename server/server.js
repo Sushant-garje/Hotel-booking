@@ -9,6 +9,7 @@ import hotelRouter from "./routes/hotelRoutes.js"
 import connectCloudinary from "./configs/cloudinary.js"
 import roomRouter from "./routes/roomRoutes.js"
 import bookingRouter from "./routes/bookingRoutes.js"
+import { stripeWebhooks } from "./controllers/stripeWebhook.js"
 
 // Calling the ConnectDB() function
 connectDB()
@@ -29,6 +30,9 @@ app.use(express.json())
 
 // Adding ClerkMiddle ware
 app.use(clerkMiddleware())
+
+// API to listen to Stripe Webhooks
+app.post("/api/stripe",express.raw({ type: "application/json" }),stripeWebhooks);
 
 // API to Listen Clerk WebHooks
 app.use("/api/clerk", clerkWebhooks);
