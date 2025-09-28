@@ -19,7 +19,7 @@ connectCloudinary();
 // Creating an app using Express
 const app = express()
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://quick-stay-lilac.vercel.app",
   credentials: true,
 }));  // Enable Cross origin Resource Sharing
 // This will help in connect frontend with the backend
