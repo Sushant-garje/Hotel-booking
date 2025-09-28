@@ -1,73 +1,83 @@
-import React, { useState } from 'react'
-import { roomsDummyData } from '../../assets/assets'
+import React, { useEffect } from 'react'
 import Title from '../../components/Title'
+import { useAppContext } from '../../context/Appcontext';
+import toast from 'react-hot-toast';
 
 const ListRoom = () => {
-  const [rooms, setRooms] = useState(roomsDummyData)
 
-  const toggleAvailability = (index) => {
-    const updatedRooms = [...rooms]
-    updatedRooms[index].isAvailable = !updatedRooms[index].isAvailable
-    setRooms(updatedRooms)
-  }
+    const { axios, getToken, user } = useAppContext()
+    const [rooms, setRooms] = React.useState([])
 
-  return (
-    <div className="px-4 py-6">
-      <Title
-        align="left"
-        font="outfit"
-        title="Room Listings"
-        subTitle="View, edit, or manage all listed rooms."
-      />
+    // Fetch Rooms of the Hotel Owner
+    const fetchRooms = async () => {
+        try {
+            const { data } = await axios.get('/api/rooms/owner', { headers: { Authorization: `Bearer ${await getToken()}` } })
+            if (data.success) {
+                setRooms(data.rooms)
+            }
+            else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
 
-      <p className="text-gray-700 mt-8 font-medium">All Rooms</p>
+    // Toggle Availability of the Room
+    const toggleAvailability = async (roomId) => {
+        const { data } = await axios.post("/api/rooms/toggle-availability", { roomId }, { headers: { Authorization: `Bearer ${await getToken()}` } })
+        if (data.success) {
+            toast.success(data.message)
+            fetchRooms()
+        } else {
+            toast.error(data.message)
+        }
+    }
 
-      <div className="w-full max-w-4xl rounded-xl overflow-hidden shadow-md border border-gray-200 bg-white/40 backdrop-blur-lg max-h-96 overflow-y-auto mt-4">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100 text-gray-800">
-            <tr>
-              <th className="py-3 px-4 text-left">Name</th>
-              <th className="py-3 px-4 text-left max-sm:hidden">Facility</th>
-              <th className="py-3 px-4 text-left">Price/night</th>
-              <th className="py-3 px-4 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white/50">
-            {rooms.map((item, index) => (
-              <tr key={index} className="border-t border-gray-300 text-gray-700">
-                <td className="py-3 px-4">{item.roomType}</td>
-                <td className="py-3 px-4 max-sm:hidden">
-                  {typeof item.amenities === 'object'
-                    ? Object.entries(item.amenities)
-                        .filter(([_, value]) => value)
-                        .map(([key]) => key)
-                        .join(', ')
-                    : item.amenities}
-                </td>
-                <td className="py-3 px-4">₹{item.pricePerNight}</td>
-                <td className="py-3 px-4 text-center">
-                  <label className="inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={item.isAvailable}
-                      onChange={() => toggleAvailability(index)}
-                    />
-                    <div className="w-12 h-6 bg-gray-300 peer-checked:bg-blue-600 rounded-full relative transition duration-200">
-                      <span className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all duration-200 peer-checked:translate-x-6"></span>
-                    </div>
-                    <span className="ml-3 text-xs">
-                      {item.isAvailable ? 'Available' : 'Unavailable'}
-                    </span>
-                  </label>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
+    // Fetch Rooms when user is logged in
+    useEffect(() => {
+        if (user) {
+            fetchRooms()
+        }
+    }, [user])
+
+    return (
+        <div>
+            <Title align='left' font='outfit' title='Room Listings' subTitle='View, edit, or manage all listed rooms. Keep the information up-to-date to provide the best experience for users.' />
+            <p className='text-gray-500 mt-8'>Total Hotels</p>
+            {/* Table with heads User Name, Room Name, Amount Paid, Payment Status */}
+            <div className='w-full max-w-3xl text-left border border-gray-300 rounded-lg max-h-80 overflow-y-scroll mt-3'>
+                <table className='w-full' >
+                    <thead className='bg-gray-50 '>
+                        <tr>
+                            <th className='py-3 px-4 text-gray-800 font-medium'>Name</th>
+                            <th className='py-3 px-4 text-gray-800 font-medium max-sm:hidden'>Facility</th>
+                            <th className='py-3 px-4 text-gray-800 font-medium'>Price / night</th>
+                            <th className='py-3 px-4 text-gray-800 font-medium text-center'>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className='text-sm'>
+                        {
+                            rooms.map((item, index) => (
+                                <tr key={index}>
+                                    <td className='py-3 px-4 text-gray-700 border-t border-gray-300'>{item.roomType}</td>
+                                    <td className='py-3 px-4 text-gray-400 border-t border-gray-300 max-sm:hidden'>{item.amenities.join(', ')}</td>
+                                    <td className='py-3 px-4 text-gray-400 border-t border-gray-300'>{import.meta.env.VITE_CURRENCY}{item.pricePerNight}</td>
+                                    <td className='py-3 px-4  border-t border-gray-300 text-center text-sm text-red-500'>
+                                        <label className="relative inline-flex items-center cursor-pointer text-gray-900 gap-3">
+                                            <input type="checkbox" className="sr-only peer" onChange={() => toggleAvailability(item._id)} checked={item.isAvailable} />
+                                            <div className="w-12 h-7 bg-slate-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-200"></div>
+                                            <span className="dot absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-5"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
 }
 
 export default ListRoom

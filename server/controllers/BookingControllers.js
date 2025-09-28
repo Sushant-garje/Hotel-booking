@@ -2,6 +2,7 @@
 import Booking from "../models/Booking.js"
 import Hotel from "../models/Hotel.js"
 import Room from "../models/Room.js"
+import transporter from "../configs/nodemailer.js";
 
 
 //  Function to Check Availability of Room 
@@ -113,7 +114,7 @@ export const createBooking = async (req,res)=>{
          }
 
         //Creating a Function to Send the Email
-        // await transporter.sendMail(mailOptions) //This email will be sent to the user after booking
+        await transporter.sendMail(mailOptions) //This email will be sent to the user after booking
 
 
         res.json({success : true , message: "Booking Created SuccessFully!"})

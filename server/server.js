@@ -18,7 +18,10 @@ connectCloudinary();
 
 // Creating an app using Express
 const app = express()
-app.use(cors())  // Enable Cross origin Resource Sharing
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));  // Enable Cross origin Resource Sharing
 // This will help in connect frontend with the backend
 
 // one more middleware - all requests will be passed using json method.

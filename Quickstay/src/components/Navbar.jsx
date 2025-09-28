@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { assets } from '../assets/assets'
 import {Link,useNavigate,useLocation} from 'react-router-dom'
 import { useClerk, UserButton, useUser } from '@clerk/clerk-react';
+import { useAppContext } from '../context/Appcontext';
 
 
 
@@ -29,8 +30,7 @@ function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const {openSignIn} = useClerk()
-    const {user} =  useUser()
-    const navigate = useNavigate();
+    const {user,navigate,isOwner,setShowHotelReg} =  useAppContext()
     const location = useLocation();
 
 
@@ -68,8 +68,8 @@ function Navbar() {
                         </Link>
                     ))}
                    {user &&
-                     <button className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`} onClick={()=>navigate('/owner')}>
-                       Dashboard
+                     <button className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${isScrolled ? 'text-black' : 'text-white'} transition-all`} onClick={()=>isOwner ? navigate('/owner') : setShowHotelReg(true)}>
+                       {isOwner ? "Dashboard" : "List Your Hotel"}
                     </button>
                    }
                 </div>
@@ -130,8 +130,8 @@ function Navbar() {
                     ))}
 
                     {user && 
-                        <button className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all">
-                        Dashboard
+                        <button className="border px-4 py-1 text-sm font-light rounded-full cursor-pointer transition-all" onClick={()=>isOwner ? navigate('/owner') : setShowHotelReg(true)}>
+                         {isOwner ? "Dashboard" : "List Your Hotel"}
                         </button>
                     }
 
