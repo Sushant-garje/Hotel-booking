@@ -33,8 +33,15 @@ app.use(express.json())
 // Adding ClerkMiddle ware
 app.use(clerkMiddleware())
 
-// API to listen to Stripe Webhooks
-app.post("/api/stripe",express.raw({ type: "application/json" }),stripeWebhooks);
+// // API to listen to Stripe Webhooks
+// app.post("/api/stripe",express.raw({ type: "application/json" }),stripeWebhooks);
+
+// ✅ Stripe webhook must use raw body
+app.post(
+  "/api/stripe",
+  express.raw({ type: "application/json" }),
+  stripeWebhooks
+);
 
 // API to Listen Clerk WebHooks
 app.use("/api/clerk", clerkWebhooks);
