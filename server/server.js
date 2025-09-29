@@ -26,9 +26,17 @@ app.use(cors({
 }));  // Enable Cross origin Resource Sharing
 // This will help in connect frontend with the backend
 
+// ✅ Stripe webhook must use raw body
+app.post(
+  "/api/stripe",
+  express.raw({ type: "application/json" }),
+  stripeWebhooks
+);
+
 
 // one more middleware - all requests will be passed using json method.
 app.use(express.json())
+
 
 // Adding ClerkMiddle ware
 app.use(clerkMiddleware())
@@ -36,12 +44,7 @@ app.use(clerkMiddleware())
 // // API to listen to Stripe Webhooks
 // app.post("/api/stripe",express.raw({ type: "application/json" }),stripeWebhooks);
 
-// ✅ Stripe webhook must use raw body
-app.post(
-  "/api/stripe",
-  express.raw({ type: "application/json" }),
-  stripeWebhooks
-);
+
 
 // API to Listen Clerk WebHooks
 app.use("/api/clerk", clerkWebhooks);
