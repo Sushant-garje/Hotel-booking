@@ -214,7 +214,7 @@ export const createBooking = async (req,res)=>{
         quantity: 1,
       },
     ];
-
+    console.log(line_items);
     // Create Checkout Session
     const session = await stripeInstance.checkout.sessions.create({
       line_items,
@@ -225,6 +225,8 @@ export const createBooking = async (req,res)=>{
         bookingId,
       },
     });
+
+    console.log(session);
     res.json({ success: true, url: session.url });
 
   } catch (error) {

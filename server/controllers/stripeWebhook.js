@@ -7,12 +7,14 @@ export const stripeWebhooks = async (request, response) => {
   // Stripe Gateway Initialize
   const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY);
 
+  console.log("Webhook received:", request.headers);
   const sig = request.headers["stripe-signature"];
 
   let event;
 
   try {
     event = stripeInstance.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    console.log(event)
   } catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
   }
@@ -26,6 +28,8 @@ export const stripeWebhooks = async (request, response) => {
     const session = await stripeInstance.checkout.sessions.list({
       payment_intent: paymentIntentId,
     });
+
+    console.log(session)
 
     const { bookingId } = session.data[0].metadata;
 
